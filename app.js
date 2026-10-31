@@ -1,4 +1,4 @@
-﻿// Essence sur Autoroute - Application Waze-like
+// Essence sur Autoroute - Application Waze-like
 // Trajet point A à point B, étapes, alternatives, stations en ordre chronologique avec PK, enseignes et prix
 
 // ============================================================================
@@ -31,6 +31,12 @@ const AFFILIATE_CONFIG = {
       }
     ]
   }
+};
+
+// Prix en direct Allemagne (Tankerkönig / MTS-K) via relais Cloudflare Worker.
+// Laisser vide tant que le relais n'est pas déployé : les prix allemands restent indicatifs.
+const DE_LIVE_PRICES = {
+  proxyUrl: '' // ex. 'https://fuelpilot-de.<votre-compte>.workers.dev'
 };
 
 let map;
@@ -899,8 +905,8 @@ function renderCountryBadgesOnMap() {
     const icon = L.divIcon({
       className: 'country-badge-marker',
       html: `<div class="country-badge-pill">${c.flag} ${c.name} <span class="country-count-tag">• ${c.count}</span></div>`,
-      iconSize: [148, 26],
-      iconAnchor: [74, 13]
+      iconSize: [0, 0],
+      iconAnchor: [0, 0]
     });
     countryBadgeMarkers.push(L.marker(c.coords, { icon, interactive: false }).addTo(map));
   });
@@ -966,6 +972,7 @@ function setAppLanguage(lang, isManual = false) {
   if (privEl) {
     privEl.textContent = tr.privacy;
     privEl.title = tr.privacy;
+    privEl.href = `privacy.html?lang=${currentLang}`;
   }
 
   const liveEl = document.getElementById('i18n-live-text') || document.querySelector('.live-text');
@@ -1442,6 +1449,10 @@ async function loadStationsData() {
   try {
     const res = await fetch(`stations_autoroute.json?v=${APP_VERSION}`);
     allStations = await res.json();
+    if (DE_LIVE_PRICES.proxyUrl) {
+      // Les aires allemandes réelles sont chargées à la demande depuis Tankerkönig
+      allStations = allStations.filter(s => !(s.pays === 'DE' && String(s.id).startsWith('DE-BAB-')));
+    }
     populateBrandFilter();
     const badge = document.getElementById('total-stations-badge');
     if (badge) badge.textContent = t().areasCount(allStations.length);
@@ -1497,19 +1508,36 @@ async function loadCoveredCountries() {
 }
 
 // Populate Brands Filter dropdown
+// Dynamically adjusts: when route stations are computed, prioritizes brands of the traversed country/countries
 function populateBrandFilter() {
   const brandSelect = document.getElementById('select-brand');
+  if (!brandSelect) return;
+  const currentVal = selectedBrand;
+
+  // Determine station pool: if an itinerary has matched stations, use route stations
+  // otherwise fallback to all network stations
+  const pool = (currentRouteStations && currentRouteStations.length > 0)
+    ? currentRouteStations
+    : allStations;
+
   const counts = {};
-  allStations.forEach(s => {
+  pool.forEach(s => {
     const b = s.enseigne || 'Indépendant';
     counts[b] = (counts[b] || 0) + 1;
   });
 
   const sortedBrands = Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
-  brandSelect.innerHTML = `<option value="all">${t().allBrands} (${sortedBrands.length})</option>`;
+  let html = `<option value="all">${t().allBrands} (${sortedBrands.length})</option>`;
   sortedBrands.forEach(b => {
-    brandSelect.innerHTML += `<option value="${b}">${b} (${counts[b]})</option>`;
+    const isSel = (b === currentVal) ? ' selected' : '';
+    html += `<option value="${b}"${isSel}>${b} (${counts[b]})</option>`;
   });
+  brandSelect.innerHTML = html;
+
+  if (currentVal !== 'all' && !counts[currentVal]) {
+    selectedBrand = 'all';
+    brandSelect.value = 'all';
+  }
 }
 
 // Bilingual European Cities Index (instant support for English, French, Spanish & Italian names)
@@ -2651,8 +2679,76 @@ function processStationsOnRoute(route) {
   });
 
   currentRouteStations = matched;
+  populateBrandFilter();
   renderCurrentRouteStations();
   fitMapToRouteAndStations();
+  maybeLoadGermanLivePrices(route, coords, cumDist);
+}
+
+// Charge à la demande les stations allemandes et leurs prix réels le long du trajet
+// (un appel par tranche de ~40 km en Allemagne, 12 appels maximum, mis en cache 5 min par le relais)
+async function maybeLoadGermanLivePrices(route, coords, cumDist) {
+  if (!DE_LIVE_PRICES.proxyUrl || !route || route._deLiveRequested) return;
+  route._deLiveRequested = true;
+
+  const inGermany = (lat, lon) => lat >= 47.2 && lat <= 55.1 && lon >= 5.8 && lon <= 15.1;
+  const samples = [];
+  let nextKm = 0;
+  for (let i = 0; i < coords.length && samples.length < 12; i++) {
+    const [lon, lat] = coords[i];
+    if (cumDist[i] >= nextKm && inGermany(lat, lon)) {
+      samples.push([lat, lon]);
+      nextKm = cumDist[i] + 40;
+    }
+  }
+  if (samples.length === 0) return;
+
+  const base = DE_LIVE_PRICES.proxyUrl.replace(/\/$/, '');
+  const responses = await Promise.allSettled(samples.map(([lat, lon]) => {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 6000);
+    return fetch(`${base}/list?lat=${lat.toFixed(3)}&lng=${lon.toFixed(3)}&rad=25`, { signal: ctrl.signal })
+      .then(r => r.json())
+      .finally(() => clearTimeout(timer));
+  }));
+
+  const knownIds = new Set(allStations.map(s => String(s.id)));
+  let added = 0;
+  responses.forEach(res => {
+    if (res.status !== 'fulfilled' || !res.value || !Array.isArray(res.value.stations)) return;
+    res.value.stations.forEach(tk => {
+      const id = `TK-${tk.id}`;
+      if (knownIds.has(id)) return;
+      knownIds.add(id);
+      const prix = {};
+      if (typeof tk.e10 === 'number' && tk.e10 > 0) prix.e10 = tk.e10;
+      if (typeof tk.e5 === 'number' && tk.e5 > 0) prix.sp95 = tk.e5;
+      if (typeof tk.diesel === 'number' && tk.diesel > 0) prix.gazole = tk.diesel;
+      allStations.push({
+        id,
+        pays: 'DE',
+        live: true,
+        enseigne: (tk.brand || tk.name || 'Tankstelle').trim(),
+        nom: (tk.name || '').trim(),
+        autoroute: '',
+        sens: '',
+        adresse: `${tk.street || ''} ${tk.houseNumber || ''}`.trim(),
+        cp: tk.postCode ? String(tk.postCode) : '',
+        ville: tk.place || '',
+        lat: tk.lat,
+        lon: tk.lng,
+        pk_text: null,
+        prix,
+        ruptures: [],
+        services: []
+      });
+      added++;
+    });
+  });
+
+  if (added > 0 && activeRouteData === route) {
+    processStationsOnRoute(route);
+  }
 }
 
 // Render stations in sidebar and on map
@@ -2884,7 +2980,8 @@ function renderCurrentRouteStations() {
       <div class="prices-container">
         ${renderCardPrices(st.prix, selectedFuel, isCheapest, st.pays)}
       </div>
-      ${(st.pays === 'BE' || st.pays === 'DE') ? `<div style="font-size:0.68rem; color:#94a3b8; margin-top:3px;">${t().estimatedPrice}</div>` : ''}
+      ${(st.pays === 'BE' || (st.pays === 'DE' && !st.live)) ? `<div style="font-size:0.68rem; color:#94a3b8; margin-top:3px;">${t().estimatedPrice}</div>` : ''}
+      ${(st.pays === 'DE' && st.live) ? `<div style="font-size:0.66rem; color:#94a3b8; margin-top:3px;">MTS-K · <a href="https://www.tankerkoenig.de" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();" style="color:#7dd3fc;">Tankerkönig</a> (CC BY 4.0)</div>` : ''}
 
       ${(() => {
         if (selectedFuel !== 'all' || !st.ruptures || st.ruptures.length === 0) return '';

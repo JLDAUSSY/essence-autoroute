@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Politique de Confidentialité — FuelPilot</title>
+  <title id="doc-title">Politique de Confidentialité — FuelPilot</title>
   <link rel="icon" type="image/png" href="icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,10 +38,17 @@
     header {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 14px;
-      margin-bottom: 28px;
-      padding-bottom: 20px;
+      margin-bottom: 24px;
+      padding-bottom: 18px;
       border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
     }
     .logo {
       width: 52px;
@@ -50,7 +57,7 @@
       box-shadow: 0 0 16px rgba(14, 165, 233, 0.4);
     }
     h1 {
-      font-size: 1.6rem;
+      font-size: 1.45rem;
       font-weight: 800;
       color: #fff;
     }
@@ -64,6 +71,31 @@
       border-radius: 20px;
       margin-top: 4px;
       font-weight: 600;
+    }
+    .lang-switcher {
+      display: flex;
+      gap: 6px;
+      background: rgba(15, 23, 42, 0.7);
+      padding: 4px;
+      border-radius: 20px;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+    }
+    .lang-btn {
+      background: transparent;
+      border: none;
+      font-size: 1.15rem;
+      padding: 4px 8px;
+      border-radius: 14px;
+      cursor: pointer;
+      opacity: 0.55;
+      transition: all 0.2s;
+    }
+    .lang-btn:hover { opacity: 0.9; transform: scale(1.08); }
+    .lang-btn.active {
+      opacity: 1;
+      background: rgba(56, 189, 248, 0.25);
+      box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+      transform: scale(1.05);
     }
     h2 {
       font-size: 1.18rem;
@@ -106,57 +138,310 @@
 <body>
   <div class="container">
     <header>
-      <img src="icon.png" alt="FuelPilot Logo" class="logo">
-      <div>
-        <h1>Fuel<span>Pilot</span> — Politique de Confidentialité</h1>
-        <div class="badge-date">Dernière mise à jour : 29 octobre 2026</div>
+      <div class="header-left">
+        <img src="icon.png" alt="FuelPilot Logo" class="logo">
+        <div>
+          <h1 id="title-main">Fuel<span>Pilot</span> — Politique de Confidentialité</h1>
+          <div class="badge-date" id="badge-date">Dernière mise à jour : 31 octobre 2026</div>
+        </div>
+      </div>
+      <div class="lang-switcher" id="lang-switcher">
+        <button type="button" class="lang-btn" data-lang="fr" title="Français">🇫🇷</button>
+        <button type="button" class="lang-btn" data-lang="de" title="Deutsch">🇩🇪</button>
+        <button type="button" class="lang-btn" data-lang="it" title="Italiano">🇮🇹</button>
+        <button type="button" class="lang-btn" data-lang="es" title="Español">🇪🇸</button>
+        <button type="button" class="lang-btn" data-lang="en" title="English">🇬🇧</button>
       </div>
     </header>
 
-    <p>Cette politique de confidentialité s'applique à l'application <strong>FuelPilot</strong> (application Web, PWA et version Android distribuée sur le Google Play Store), éditée par <strong>JLDApps</strong>.</p>
-
-    <h2>1. Collecte et traitement des données personnelles</h2>
-    <p><strong>FuelPilot ne collecte, ne stocke et ne transmet aucune donnée personnelle nominative.</strong></p>
-    <ul>
-      <li>Aucune création de compte n'est requise.</li>
-      <li>Aucun nom, prénom, adresse e-mail ou numéro de téléphone n'est collecté.</li>
-      <li>Aucun système de paiement n'est intégré dans l'application.</li>
-    </ul>
-
-    <h2>2. Données de localisation</h2>
-    <p>L'application peut solliciter l'accès à la localisation de votre appareil (GPS) uniquement avec votre consentement préalable et dans le seul but de :</p>
-    <ul>
-      <li>Centrer la carte autour de votre position actuelle.</li>
-      <li>Calculer les itinéraires à partir de votre position de départ vers votre destination.</li>
-    </ul>
-    <p><strong>Ces données géographiques sont traitées exclusivement en mémoire locale sur votre appareil.</strong> Elles ne sont jamais enregistrées sur nos serveurs, ne sont pas partagées avec des tiers et ne font l'objet d'aucun historique de géolocalisation.</p>
-
-    <h2>3. Cookies et traceurs tiers</h2>
-    <p>L'application FuelPilot <strong>n'utilise aucun cookie publicitaire, aucun traceur de profilage commercial ni aucun outil de pistage inter-applications</strong>.</p>
-    <p>Un stockage local technique (localStorage / sessionStorage du navigateur) peut être utilisé uniquement pour mémoriser temporairement vos préférences d'affichage (choix du carburant sélectionné, filtres d'enseignes ou zoom sur la carte).</p>
-
-    <h2>4. Sources et services tiers utilisés</h2>
-    <p>Pour fournir des informations précises et en temps réel, FuelPilot interroge exclusivement des services ouverts et des données publiques officielles :</p>
-    <ul>
-      <li><strong>Prix des carburants :</strong> Données publiques ouvertes fournies par les ministères et organismes officiels (Ministère de l'Économie en France, Ministère de la Transition Écologique en Espagne, Ministère des Entreprises et du Made in Italy en Italie).</li>
-      <li><strong>Cartographie :</strong> Fonds de carte libres OpenStreetMap et dalles CARTO.</li>
-      <li><strong>Calcul d'itinéraires :</strong> Moteur de routage OSRM (Open Source Routing Machine).</li>
-    </ul>
-
-    <h2>5. Sécurité</h2>
-    <p>L'ensemble des communications réseau s'effectue via des protocoles chiffrés sécurisés <strong>HTTPS (TLS)</strong>, garantissant l'intégrité et la confidentialité des échanges.</p>
-
-    <h2>6. Vos droits (RGPD)</h2>
-    <p>Conformément au Règlement Général sur la Protection des Données (RGPD), vous disposez à tout moment d'un droit de contrôle total sur vos données. Comme aucune donnée personnelle n'est enregistrée, aucune démarche de suppression n'est nécessaire : la fermeture de l'application ou la désinstallation efface immédiatement toute trace locale.</p>
-
-    <h2>7. Contact</h2>
-    <p>Pour toute question concernant cette politique de confidentialité ou le fonctionnement de l'application FuelPilot, vous pouvez contacter le développeur à l'adresse suivante :</p>
-    <p><strong>E-mail :</strong> <a href="mailto:contact.fuelpilot@gmail.com" style="color:#38bdf8; text-decoration:none;">contact.fuelpilot@gmail.com</a></p>
+    <div id="content-body"></div>
 
     <a href="index.html" id="btn-back-app" class="btn-back">← Retour à FuelPilot</a>
   </div>
+
   <script>
-    document.getElementById('btn-back-app').href = 'index.html?_v=' + Date.now();
+    const PRIVACY_TEXTS = {
+      fr: {
+        docTitle: 'Politique de Confidentialité — FuelPilot',
+        headerTitle: 'Fuel<span>Pilot</span> — Politique de Confidentialité',
+        badgeDate: 'Dernière mise à jour : 31 octobre 2026',
+        backBtn: '← Retour à FuelPilot',
+        html: `
+          <p>Cette politique de confidentialité s'applique à l'application <strong>FuelPilot</strong> (application Web, PWA et version Android distribuée sur le Google Play Store), éditée par <strong>JLDApps</strong>.</p>
+
+          <h2>1. Collecte et traitement des données personnelles</h2>
+          <p><strong>FuelPilot ne collecte, ne stocke et ne transmet aucune donnée personnelle nominative.</strong></p>
+          <ul>
+            <li>Aucune création de compte n'est requise.</li>
+            <li>Aucun nom, prénom, adresse e-mail ou numéro de téléphone n'est collecté.</li>
+            <li>Aucun système de paiement n'est intégré dans l'application.</li>
+          </ul>
+
+          <h2>2. Données de localisation</h2>
+          <p>L'application peut solliciter l'accès à la localisation de votre appareil (GPS) uniquement avec votre consentement préalable et dans le seul but de :</p>
+          <ul>
+            <li>Centrer la carte autour de votre position actuelle.</li>
+            <li>Calculer les itinéraires à partir de votre position de départ vers votre destination.</li>
+          </ul>
+          <p><strong>Ces données géographiques sont traitées exclusivement en mémoire locale sur votre appareil.</strong> Elles ne sont jamais enregistrées sur nos serveurs, ne sont pas partagées avec des tiers et ne font l'objet d'aucun historique de géolocalisation.</p>
+
+          <h2>3. Cookies et traceurs tiers</h2>
+          <p>L'application FuelPilot <strong>n'utilise aucun cookie publicitaire, aucun traceur de profilage commercial ni aucun outil de pistage inter-applications</strong>.</p>
+          <p>Un stockage local technique (localStorage du navigateur) est utilisé uniquement pour mémoriser temporairement vos préférences (choix de la langue, du carburant et filtres d'enseignes).</p>
+
+          <h2>4. Sources et services tiers utilisés</h2>
+          <p>Pour fournir des informations précises et en temps réel, FuelPilot interroge exclusivement des services ouverts et des données publiques officielles :</p>
+          <ul>
+            <li><strong>Prix des carburants :</strong> Données publiques ouvertes officielles (Ministère de l'Économie en France, Tankerkönig / MTS-K en Allemagne, Ministère de la Transition Écologique en Espagne, MIMIT en Italie, Open Data officiels en Belgique et Royaume-Uni).</li>
+            <li><strong>Cartographie :</strong> Fonds de carte libres OpenStreetMap et dalles CARTO.</li>
+            <li><strong>Calcul d'itinéraires :</strong> Moteur de routage OSRM (Open Source Routing Machine).</li>
+          </ul>
+
+          <h2>5. Sécurité</h2>
+          <p>L'ensemble des communications réseau s'effectue via des protocoles chiffrés sécurisés <strong>HTTPS (TLS)</strong>, garantissant l'intégrité et la confidentialité des échanges.</p>
+
+          <h2>6. Vos droits (RGPD)</h2>
+          <p>Conformément au Règlement Général sur la Protection des Données (RGPD), vous disposez à tout moment d'un droit de contrôle total sur vos données. Comme aucune donnée personnelle n'est enregistrée, la fermeture de l'application ou la désinstallation efface immédiatement toute trace locale.</p>
+
+          <h2>7. Contact</h2>
+          <p>Pour toute question concernant cette politique de confidentialité ou l'application FuelPilot, vous pouvez contacter l'éditeur :</p>
+          <p><strong>E-mail :</strong> <a href="mailto:contact.fuelpilot@gmail.com" style="color:#38bdf8; text-decoration:none;">contact.fuelpilot@gmail.com</a></p>
+        `
+      },
+      de: {
+        docTitle: 'Datenschutzerklärung — FuelPilot',
+        headerTitle: 'Fuel<span>Pilot</span> — Datenschutzerklärung',
+        badgeDate: 'Letzte Aktualisierung: 31. Oktober 2026',
+        backBtn: '← Zurück zu FuelPilot',
+        html: `
+          <p>Diese Datenschutzerklärung gilt für die Anwendung <strong>FuelPilot</strong> (Web-App, PWA und Android-Version im Google Play Store), herausgegeben von <strong>JLDApps</strong>.</p>
+
+          <h2>1. Erhebung und Verarbeitung personenbezogener Daten</h2>
+          <p><strong>FuelPilot erhebt, speichert und übermittelt keinerlei personenbezogene Daten.</strong></p>
+          <ul>
+            <li>Keine Kontoerstellung erforderlich.</li>
+            <li>Keine Erfassung von Namen, E-Mail-Adressen oder Telefonnummern.</li>
+            <li>Kein integriertes Bezahlsystem.</li>
+          </ul>
+
+          <h2>2. Standortdaten</h2>
+          <p>Die App fragt den GPS-Standort Ihres Geräts nur nach Ihrer ausdrücklichen Zustimmung ab, und zwar ausschließlich für:</p>
+          <ul>
+            <li>Zentrierung der Karte auf Ihren aktuellen Standort.</li>
+            <li>Routenberechnung von Ihrem Startort zum Ziel.</li>
+          </ul>
+          <p><strong>Diese Standortdaten werden ausschließlich lokal im Speicher Ihres Geräts verarbeitet.</strong> Sie werden weder auf unseren Servern gespeichert noch an Dritte weitergegeben.</p>
+
+          <h2>3. Cookies und Tracking</h2>
+          <p>FuelPilot verwendet <strong>weder Werbe-Cookies noch Tracking-Tools oder geräteübergreifende Analyse-Tracker</strong>.</p>
+          <p>Der lokale Browserspeicher (localStorage) wird lediglich genutzt, um Ihre bevorzugte Sprache, die gewählte Kraftstoffsorte und Markeneinstellungen lokal zu sichern.</p>
+
+          <h2>4. Datenquellen und Drittanbieter</h2>
+          <p>FuelPilot greift ausschließlich auf offizielle öffentliche Datenquellen und Open Data zu:</p>
+          <ul>
+            <li><strong>Kraftstoffpreise:</strong> Offizielle Plattformen (Deutschland: Tankerkönig / Markttransparenzstelle für Kraftstoffe MTS-K; Frankreich: Ministère de l'Économie; Spanien: Ministerio para la Transición Ecológica; Italien: MIMIT; Belgien & UK Open Data).</li>
+            <li><strong>Kartografie:</strong> Freie OpenStreetMap-Kartenkacheln und CARTO.</li>
+            <li><strong>Routenberechnung:</strong> OSRM (Open Source Routing Machine).</li>
+          </ul>
+
+          <h2>5. Sicherheit</h2>
+          <p>Der gesamte Datenverkehr erfolgt über verschlüsselte <strong>HTTPS (TLS)</strong>-Verbindungen.</p>
+
+          <h2>6. Ihre Rechte (DSGVO)</h2>
+          <p>Gemäß DSGVO haben Sie volle Kontrolle. Da FuelPilot keine personenbezogenen Daten speichert, werden beim Schließen oder Deinstallieren der App alle lokalen Einstellungen restlos entfernt.</p>
+
+          <h2>7. Kontakt</h2>
+          <p>Bei Fragen zu dieser Datenschutzerklärung oder zur FuelPilot-App erreichen Sie uns unter:</p>
+          <p><strong>E-Mail:</strong> <a href="mailto:contact.fuelpilot@gmail.com" style="color:#38bdf8; text-decoration:none;">contact.fuelpilot@gmail.com</a></p>
+        `
+      },
+      it: {
+        docTitle: 'Informativa sulla Privacy — FuelPilot',
+        headerTitle: 'Fuel<span>Pilot</span> — Informativa sulla Privacy',
+        badgeDate: 'Ultimo aggiornamento: 31 ottobre 2026',
+        backBtn: '← Torna a FuelPilot',
+        html: `
+          <p>Questa informativa sulla privacy si applica all'applicazione <strong>FuelPilot</strong> (Web App, PWA e versione Android su Google Play Store), sviluppata da <strong>JLDApps</strong>.</p>
+
+          <h2>1. Raccolta e trattamento dei dati personali</h2>
+          <p><strong>FuelPilot non raccoglie, non memorizza e non trasmette alcun dato personale identificabile.</strong></p>
+          <ul>
+            <li>Nessuna registrazione o creazione di account richiesta.</li>
+            <li>Nessuna raccolta di nomi, indirizzi e-mail o numeri di telefono.</li>
+            <li>Nessun sistema di pagamento integrato.</li>
+          </ul>
+
+          <h2>2. Dati di geolocalizzazione</h2>
+          <p>L'applicazione può richiedere l'accesso alla posizione GPS solo previo consenso dell'utente ed esclusivamente per:</p>
+          <ul>
+            <li>Centrare la mappa sulla posizione attuale.</li>
+            <li>Calcolare l'itinerario stradale dalla partenza alla destinazione.</li>
+          </ul>
+          <p><strong>I dati geografici sono elaborati esclusivamente nella memoria locale del dispositivo.</strong> Non vengono mai memorizzati sui nostri server né condivisi con terzi.</p>
+
+          <h2>3. Cookie e tracciamento</h2>
+          <p>FuelPilot <strong>non utilizza cookie pubblicitari né strumenti di profilazione o tracciamento tra app</strong>.</p>
+          <p>La memoria locale (localStorage) serve esclusivamente a conservare la lingua, il tipo di carburante scelto e le preferenze di filtro.</p>
+
+          <h2>4. Fonti ufficiali e servizi terzi</h2>
+          <p>FuelPilot interroga esclusivamente dati aperti e fonti pubbliche governative:</p>
+          <ul>
+            <li><strong>Prezzi carburanti:</strong> Fonti aperte ufficiali (MIMIT Osservaprezzi in Italia, Ministère de l'Économie in Francia, Tankerkönig in Germania, Ministero della Transizione Ecologica in Spagna, open data Belgio e Regno Unito).</li>
+            <li><strong>Mappe:</strong> OpenStreetMap e CARTO basati su licenza aperta.</li>
+            <li><strong>Navigazione e percorsi:</strong> Motore OSRM.</li>
+          </ul>
+
+          <h2>5. Sicurezza</h2>
+          <p>Tutte le comunicazioni avvengono tramite connessioni cifrate sicure <strong>HTTPS (TLS)</strong>.</p>
+
+          <h2>6. Diritti dell'utente (GDPR)</h2>
+          <p>In conformità al Regolamento Generale sulla Protezione dei Dati (GDPR), non conservando alcun dato personale, la chiusura dell'app o la disinstallazione cancella immediatamente ogni configurazione locale.</p>
+
+          <h2>7. Contatto</h2>
+          <p>Per qualsiasi domanda relativa alla presente informativa o all'app FuelPilot:</p>
+          <p><strong>E-mail:</strong> <a href="mailto:contact.fuelpilot@gmail.com" style="color:#38bdf8; text-decoration:none;">contact.fuelpilot@gmail.com</a></p>
+        `
+      },
+      es: {
+        docTitle: 'Política de Privacidad — FuelPilot',
+        headerTitle: 'Fuel<span>Pilot</span> — Política de Privacidad',
+        badgeDate: 'Última actualización: 31 de octubre de 2026',
+        backBtn: '← Volver a FuelPilot',
+        html: `
+          <p>Esta política de privacidad se aplica a la aplicación <strong>FuelPilot</strong> (Web App, PWA y versión Android en Google Play Store), desarrollada por <strong>JLDApps</strong>.</p>
+
+          <h2>1. Recopilación y tratamiento de datos personales</h2>
+          <p><strong>FuelPilot no recopila, almacena ni transmite ningún dato personal identificable.</strong></p>
+          <ul>
+            <li>No se requiere registro ni creación de cuenta.</li>
+            <li>No se solicitan nombres, correos electrónicos ni teléfonos.</li>
+            <li>Sin sistemas de pago integrados.</li>
+          </ul>
+
+          <h2>2. Datos de ubicación</h2>
+          <p>La aplicación puede solicitar acceso a su ubicación GPS únicamente con su permiso previo y exclusivamente para:</p>
+          <ul>
+            <li>Centrar el mapa en su ubicación actual.</li>
+            <li>Calcular rutas desde su origen hasta su destino.</li>
+          </ul>
+          <p><strong>Los datos de ubicación se procesan exclusivamente en la memoria local de su dispositivo.</strong> Nunca se almacenan en servidores ni se comparten con terceros.</p>
+
+          <h2>3. Cookies y rastreadores</h2>
+          <p>FuelPilot <strong>no utiliza cookies publicitarias ni herramientas de seguimiento comercial entre aplicaciones</strong>.</p>
+          <p>El almacenamiento local (localStorage) se utiliza únicamente para recordar el idioma, el carburante seleccionado y los filtros de marcas.</p>
+
+          <h2>4. Fuentes y servicios de terceros</h2>
+          <p>FuelPilot consulta exclusivamente fuentes oficiales de datos públicos y abiertos:</p>
+          <ul>
+            <li><strong>Precios de combustibles:</strong> Registros oficiales (Ministerio para la Transición Ecológica de España - Geoportal, Ministère de l'Économie en Francia, Tankerkönig en Alemania, MIMIT en Italia, datos abiertos de Bélgica y Reino Unido).</li>
+            <li><strong>Mapas:</strong> Cartografía abierta OpenStreetMap y CARTO.</li>
+            <li><strong>Cálculo de rutas:</strong> Motor de enrutamiento OSRM.</li>
+          </ul>
+
+          <h2>5. Seguridad</h2>
+          <p>Todas las comunicaciones de red utilizan conexiones cifradas seguras <strong>HTTPS (TLS)</strong>.</p>
+
+          <h2>6. Sus derechos (RGPD)</h2>
+          <p>En conformidad con el RGPD, usted mantiene el control total. Al no registrarse datos de carácter personal en servidores externos, el cierre o desinstalación de la app elimina cualquier ajuste local.</p>
+
+          <h2>7. Contacto</h2>
+          <p>Para cualquier consulta sobre esta política de privacidad:</p>
+          <p><strong>Correo electrónico:</strong> <a href="mailto:contact.fuelpilot@gmail.com" style="color:#38bdf8; text-decoration:none;">contact.fuelpilot@gmail.com</a></p>
+        `
+      },
+      en: {
+        docTitle: 'Privacy Policy — FuelPilot',
+        headerTitle: 'Fuel<span>Pilot</span> — Privacy Policy',
+        badgeDate: 'Last updated: October 31, 2026',
+        backBtn: '← Back to FuelPilot',
+        html: `
+          <p>This Privacy Policy applies to the <strong>FuelPilot</strong> application (Web App, PWA, and Android version on the Google Play Store), published by <strong>JLDApps</strong>.</p>
+
+          <h2>1. Collection and Processing of Personal Data</h2>
+          <p><strong>FuelPilot does not collect, store, or transmit any personally identifiable information.</strong></p>
+          <ul>
+            <li>No account registration is required.</li>
+            <li>No names, email addresses, or phone numbers are requested or collected.</li>
+            <li>No in-app purchase or payment gateway is integrated.</li>
+          </ul>
+
+          <h2>2. Location Data</h2>
+          <p>FuelPilot may request access to your device's GPS location solely with your prior consent and strictly for:</p>
+          <ul>
+            <li>Centering the map on your current position.</li>
+            <li>Calculating highway routes from your departure point to your destination.</li>
+          </ul>
+          <p><strong>Location data is processed strictly in local memory on your device.</strong> It is never transmitted to, recorded on, or retained by our servers, nor is it shared with third parties.</p>
+
+          <h2>3. Cookies and Tracking</h2>
+          <p>FuelPilot <strong>does not use advertising cookies, commercial profiling tools, or cross-application tracking SDKs</strong>.</p>
+          <p>Browser local storage (localStorage) is used solely to store your display preferences (selected language, fuel type, and brand filters).</p>
+
+          <h2>4. Data Sources and Third-Party Services</h2>
+          <p>To provide accurate, real-time highway fuel prices, FuelPilot relies exclusively on official government open-data registries and open services:</p>
+          <ul>
+            <li><strong>Fuel Prices:</strong> Official registries (Ministère de l'Économie in France, Tankerkönig / MTS-K in Germany, Ministry for the Ecological Transition in Spain, MIMIT in Italy, and open data portals in Belgium and the UK).</li>
+            <li><strong>Maps:</strong> OpenStreetMap tiles and CARTO base maps.</li>
+            <li><strong>Routing:</strong> Open Source Routing Machine (OSRM).</li>
+          </ul>
+
+          <h2>5. Security</h2>
+          <p>All network traffic is encrypted end-to-end via <strong>HTTPS (TLS)</strong> protocols.</p>
+
+          <h2>6. Your Rights (GDPR / Privacy Laws)</h2>
+          <p>In full compliance with the European GDPR and UK Data Protection laws, you retain total sovereignty over your data. Because no personal data is stored on remote servers, closing or uninstalling the app immediately deletes all locally stored preferences.</p>
+
+          <h2>7. Contact</h2>
+          <p>For any questions regarding this Privacy Policy or FuelPilot, you can reach the publisher at:</p>
+          <p><strong>Email:</strong> <a href="mailto:contact.fuelpilot@gmail.com" style="color:#38bdf8; text-decoration:none;">contact.fuelpilot@gmail.com</a></p>
+        `
+      }
+    };
+
+    function getSelectedLanguage() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlLang = urlParams.get('lang');
+      if (urlLang && PRIVACY_TEXTS[urlLang.toLowerCase()]) {
+        return urlLang.toLowerCase();
+      }
+      try {
+        const stored = localStorage.getItem('fuelpilot_lang');
+        if (stored && PRIVACY_TEXTS[stored.toLowerCase()]) {
+          return stored.toLowerCase();
+        }
+      } catch (e) {}
+      const navLang = (navigator.language || 'fr').slice(0, 2).toLowerCase();
+      return PRIVACY_TEXTS[navLang] ? navLang : 'fr';
+    }
+
+    function applyLanguage(lang) {
+      const data = PRIVACY_TEXTS[lang] || PRIVACY_TEXTS.fr;
+      document.documentElement.lang = lang;
+      document.getElementById('doc-title').textContent = data.docTitle;
+      document.getElementById('title-main').innerHTML = data.headerTitle;
+      document.getElementById('badge-date').textContent = data.badgeDate;
+      document.getElementById('content-body').innerHTML = data.html;
+      const backBtn = document.getElementById('btn-back-app');
+      backBtn.textContent = data.backBtn;
+      backBtn.href = `index.html?lang=${lang}&_v=${Date.now()}`;
+
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+
+      try {
+        localStorage.setItem('fuelpilot_lang', lang);
+      } catch (e) {}
+    }
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const lang = btn.dataset.lang;
+        applyLanguage(lang);
+      });
+    });
+
+    applyLanguage(getSelectedLanguage());
   </script>
 </body>
 </html>
